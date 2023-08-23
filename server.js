@@ -39,7 +39,7 @@ app.post("/chat", async (req, res) => {
 			echo: echo,
 		});
 
-		const chatResponse = completion.choices[0]?.text.trim();
+		const chatResponse = completion.choices[0]?.message.content.trim();
 		return res.status(200).send({ message: chatResponse });
 	} catch (error) {
 		console.error(error);

@@ -14,24 +14,27 @@ app.get("/", (req, res) => {
 });
 
 app.post("/chat", async (req, res) => {
-	const { message, model, maxTokens, n, stop, temperature, topP, frequencyPenalty, presencePenalty, logprobs, echo } =
+	const { messages, model, max_tokens, n, stop, temperature, top_p, frequency_penalty, presence_penalty, logprobs, echo } =
 		req.body;
 
-	if (!message) {
-		return res.status(400).send("Message is required");
+	if (!messages) {
+		return res.status(400).send("Messages is required");
+	}
+	if (typeof messages === "string") {
+		messages = [{ role: "user", content: messages }];
 	}
 
 	try {
 		const completion = await openai.chat.completions.create({
-			messages: [{ role: "user", content: message }],
+			messages: messages,
 			model: model || "gpt-3.5-turbo",
-			max_tokens: maxTokens,
+			max_tokens: max_tokens,
 			n: n,
 			stop: stop,
 			temperature: temperature,
-			top_p: topP,
-			frequency_penalty: frequencyPenalty,
-			presence_penalty: presencePenalty,
+			top_p: top_p,
+			frequency_penalty: frequency_penalty,
+			presence_penalty: presence_penalty,
 			logprobs: logprobs,
 			echo: echo,
 		});

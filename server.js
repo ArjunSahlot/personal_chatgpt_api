@@ -6,7 +6,6 @@ const bodyParser = require("body-parser");
 const app = express();
 const openai = new OpenAI(process.env.OPENAI_API_KEY);
 
-// Enable CORS for all routes
 app.use(cors());
 app.use(bodyParser.json());
 

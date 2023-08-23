@@ -4,7 +4,6 @@ const OpenAI = require("openai");
 const bodyParser = require("body-parser");
 
 const app = express();
-const openai = new OpenAI(process.env.OPENAI_API_KEY);
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -27,6 +26,7 @@ app.post("/chat", async (req, res) => {
 		presence_penalty,
 		logprobs,
 		echo,
+		api_key,
 	} = req.body;
 
 	messages = messages || message;
@@ -39,6 +39,8 @@ app.post("/chat", async (req, res) => {
 	}
 
 	try {
+		const openai = new OpenAI(api_key || process.env.OPENAI_API_KEY);
+
 		const completion = await openai.chat.completions.create({
 			messages: messages,
 			model: model || "gpt-3.5-turbo",

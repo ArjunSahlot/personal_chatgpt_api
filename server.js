@@ -9,6 +9,10 @@ const openai = new OpenAI(process.env.OPENAI_API_KEY);
 app.use(cors());
 app.use(bodyParser.json());
 
+app.get("/", (req, res) => {
+	res.sendStatus(200);
+});
+
 app.post("/chat", async (req, res) => {
 	const { message, model, maxTokens, n, stop, temperature, topP, frequencyPenalty, presencePenalty, logprobs, echo } =
 		req.body;

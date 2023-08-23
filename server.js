@@ -14,8 +14,22 @@ app.get("/", (req, res) => {
 });
 
 app.post("/chat", async (req, res) => {
-	const { messages, model, max_tokens, n, stop, temperature, top_p, frequency_penalty, presence_penalty, logprobs, echo } =
-		req.body;
+	let {
+		messages,
+		message,
+		model,
+		max_tokens,
+		n,
+		stop,
+		temperature,
+		top_p,
+		frequency_penalty,
+		presence_penalty,
+		logprobs,
+		echo,
+	} = req.body;
+
+	messages = messages || message;
 
 	if (!messages) {
 		return res.status(400).send("Messages is required");

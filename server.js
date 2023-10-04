@@ -26,6 +26,8 @@ app.post("/chat", async (req, res) => {
 	let {
 		messages,
 		message,
+		functions,
+		function_call,
 		model,
 		max_tokens,
 		n,
@@ -42,6 +44,7 @@ app.post("/chat", async (req, res) => {
 	messages = messages || message;
 
 	if (!messages) {
+		logger.warn("Messages is required");
 		return res.status(400).send("Messages is required");
 	}
 	if (typeof messages === "string") {
@@ -52,8 +55,10 @@ app.post("/chat", async (req, res) => {
 		const openai = new OpenAI(api_key || process.env.OPENAI_API_KEY);
 
 		const completion = await openai.chat.completions.create({
-			messages: messages,
 			model: model || "gpt-3.5-turbo",
+			messages: messages,
+			functions: functions,
+			function_call: function_call,
 			max_tokens: max_tokens,
 			n: n,
 			stop: stop,
@@ -65,7 +70,7 @@ app.post("/chat", async (req, res) => {
 			echo: echo,
 		});
 
-		const chatResponse = completion.choices[0]?.message.content.trim();
+		const chatResponse = completion.choices[0]?.message;
 		logger.info({ message: chatResponse });
 		return res.status(200).send({ message: chatResponse });
 	} catch (error) {

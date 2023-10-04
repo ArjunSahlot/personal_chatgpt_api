@@ -2,8 +2,16 @@ const express = require("express");
 const cors = require("cors");
 const OpenAI = require("openai");
 const bodyParser = require("body-parser");
+const pino = require('pino');
+const pinoPretty = require('pino-pretty');
 
 const app = express();
+
+const logger = pino({
+level: 'info'
+});
+
+logger.pipe(pinoPretty());
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -56,9 +64,10 @@ app.post("/chat", async (req, res) => {
 		});
 
 		const chatResponse = completion.choices[0]?.message.content.trim();
+		logger.info({ message: chatResponse });
 		return res.status(200).send({ message: chatResponse });
 	} catch (error) {
-		console.error(error);
+		logger.error(error);
 		return res.status(500).send("An error occurred:\n\n" + error);
 	}
 });
